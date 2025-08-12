@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import com.example.demo.entity.Course;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -11,5 +12,7 @@ import javax.swing.text.html.Option;
 
 @Repository
 public interface CourseRepository extends JpaRepository<Course, UUID> {
-    Optional<Course> findByTitle(String title);
+  Optional<Course> findByTitle(String title);
+
+  Optional<List<Course>> findByTitleContaining(String title);
 }

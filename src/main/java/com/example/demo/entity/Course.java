@@ -27,6 +27,7 @@ public class Course {
   private String description;
   @OneToMany(mappedBy = "course")
   private Set<Enrollment> enrollments;
+  private int maxEnrollments ;
 
   @Override
   public String toString() {
