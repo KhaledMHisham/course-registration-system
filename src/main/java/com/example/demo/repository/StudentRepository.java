@@ -16,14 +16,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StudentRepository extends JpaRepository<Student, UUID> {
 
-  Student findByNameAndAge(String id,String age);
-
   @Query("SELECT s FROM Student s WHERE s.name = :name AND s.age = :age")
   Student getStudents(@Param("name")UUID id, @Param("age")String age);
 
   @Query("SELECT s FROM Student s WHERE s.name = :name")
   List<Student> findByName(String name);
-
-  Page<Student> findAll(Pageable pageable);
-
 }

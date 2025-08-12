@@ -1,15 +1,11 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.Course;
-import com.example.demo.entity.Enrollment;
 import com.example.demo.entity.Student;
-import com.example.demo.repository.CourseRepository;
-import com.example.demo.repository.EnrollmentRepository;
 import com.example.demo.repository.StudentRepository;
-import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,47 +14,54 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class StudentService {
+public class StudentService implements GenericService<Student> {
 
   private final StudentRepository studentRepository;
-  private final CourseRepository courseRepository;
-  private final EnrollmentRepository enrollmentRepository;
 
-
+  @Override
   public Page<Student> findAll(int page, int size) {
     Pageable pageable = PageRequest.of(page, size);
     return studentRepository.findAll(pageable);
   }
 
-  public void save(Student student) {
-    studentRepository.save(student);
+  @Override
+  public Student findById(UUID id) {
+    return studentRepository.findById(id).orElse(null);
   }
 
-  public Student updateOrSave(Student student) {
-    if (student.getId() == null) {
-      throw new IllegalArgumentException("Student ID must not be null for update");
+  @Override
+  public Student save(Student entity) {
+    if (entity.getId() != null) {
+      throw new IllegalArgumentException("Student ID must be null for new entities");
     }
-    return studentRepository.save(student);
+    return studentRepository.save(entity);
   }
 
-  public void delete(Student student) {
-    if (student.getId() == null) {
-      throw new IllegalArgumentException("Student ID must not be null for deletion");
+
+  @Override
+  public void delete(UUID id) {
+    Optional<Student> byId = studentRepository.findById(id);
+
+    if (byId.isPresent()) {
+      studentRepository.delete(byId.get());
+    } else {
+      throw new IllegalArgumentException("Student not found with ID: " + id);
     }
-    studentRepository.delete(student);
   }
 
-  public Enrollment enroll(UUID studentId, UUID courseId) {
-    Student student= studentRepository.findById(studentId).orElseThrow(() -> new IllegalArgumentException("Student not found"));
-    Course course = courseRepository.findById(courseId).orElseThrow(() -> new IllegalArgumentException("Course not found"));
+  public List<Student> findByName(String name) {
+    return studentRepository.findByName(name);
+  }
 
-    Enrollment enrollment = new Enrollment();
-    enrollment.setStudent(student);
-    enrollment.setCourse(course);
-    enrollment.setEnrollmentDate(LocalDateTime.now());
-    enrollmentRepository.save(enrollment);
+  public List<Student> getStudentsWithoutEnrollment() {
+    return studentRepository.findAll().stream()
+        .filter(student -> student.getEnrollments().isEmpty())
+        .toList();
+  }
 
-    return enrollment;
+  @Override
+  public Collection<Student> findAll() {
+    return studentRepository.findAll();
   }
 
 }
