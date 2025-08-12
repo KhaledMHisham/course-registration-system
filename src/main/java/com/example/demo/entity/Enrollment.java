@@ -26,6 +26,7 @@ public class Enrollment {
   @JoinColumn(name = "course_id")
   private Course course;
   private LocalDateTime enrollmentDate;
+  boolean isActive;
 
   @Override
   public String toString() {

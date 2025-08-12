@@ -2,6 +2,7 @@ package com.example.demo.repository;
 
 import com.example.demo.entity.Enrollment;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,5 +16,9 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, UUID> {
   List<Enrollment> findByStudentId(UUID studentId);
 
   List<Enrollment> findByCourseId(UUID courseId);
+
+  boolean findEnrollmentByIsActive(Boolean isActive);
+
+  List<Enrollment> findEnrollmentByStudentIdAndCourseId(UUID studentId, UUID courseId);
 
 }
