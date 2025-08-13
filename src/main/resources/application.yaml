@@ -19,10 +19,11 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
     show-sql: 'true'
+    defer-datasource-initialization: true
+
 
   profiles:
     active: INTEGRATION_TEST
 
 management.health.db.enabled: false
 management.endpoint.health.show-details: always
-

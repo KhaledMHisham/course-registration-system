@@ -1,0 +1,93 @@
+openapi: 3.0.1
+info:
+  title: DXL CreditCheck service
+  version: 1.6.0
+  description: |
+    description
+servers:
+  - url: 'https://localhost:8080/'
+    description: Development Environment
+
+tags:
+  - name: Courses
+    description: Operations related to student courses
+
+paths:
+  /course:
+    get:
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: string
+            default: 10
+          description: find all courses
+      tags:
+        - Courses
+      summary: find all courses
+      description: find all courses
+      operationId: findAllCourses
+      responses:
+        '200':
+          description: Successfully retrieved the response
+          content:
+            application/json;charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/courses'
+              examples:
+                courseExample:
+                  $ref: '#/components/examples/coursesExample'
+    post:
+      tags:
+        - Courses
+      description: save one entry or more of courses.
+      summary: save one entry or more of courses.
+      operationId: saveCourses
+      requestBody:
+        required: true
+        content:
+          application/json;charset=utf-8:
+            schema:
+              $ref: '#/components/schemas/course'
+            example:
+                name: "Math"
+                description: "description"
+                maxEnrollments: 5
+      responses:
+        '204':
+          description: successfully saved the config entries.
+
+components:
+  schemas:
+    courses:
+      description: Response contains entries of key-value business config and skip recovery.
+      type: object
+      properties:
+        courses:
+          description: |
+            List contains all courses
+          type: array
+          items:
+            $ref: '#/components/schemas/course'
+    course:
+      type: object
+      required:
+        - name
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        maxEnrollments:
+          type: integer
+          format: int64
+  examples:
+    coursesExample:
+      value:
+        courses:
+          - name: "Math"
+            description: "description"
+            maxEnrollments: 5
+          - name: "Physics"
+            description: "description"
+            maxEnrollments: 10
