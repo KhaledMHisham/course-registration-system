@@ -1,7 +1,9 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Course;
+import com.example.demo.errorhandler.CourseNotFoundException;
 import com.example.demo.repository.CourseRepository;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -33,11 +35,13 @@ public class CourseService implements GenericService<Course> {
 
   @Override
   public void delete(UUID id) {
+
     if (id == null) {
       throw new IllegalArgumentException("Course ID must not be null");
     }
+
     Course course = courseRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("Course not found with ID: " + id));
+        .orElseThrow(() -> new CourseNotFoundException("Course not found with ID: " + id));
     courseRepository.delete(course);
   }
 
@@ -55,19 +59,18 @@ public class CourseService implements GenericService<Course> {
 
   public Course findByTitle(String title) {
     return courseRepository.findByTitle(title)
-        .orElseThrow(() -> new IllegalArgumentException("Course not found with title: " + title));
+        .orElseThrow(() -> new CourseNotFoundException("Course not found with title: " + title));
   }
 
   public List<Course> findByTitleContaining(String title) {
-    return courseRepository.findByTitleContaining(title)
-        .orElseThrow(() -> new IllegalArgumentException("Course not found containing title: " + title));
+    return courseRepository.findByTitleContaining(title).orElse(new ArrayList<>());
   }
 
   public boolean isCourseFull(UUID courseId) {
     Optional<Course> courseOptional = courseRepository.findById(courseId);
 
     if (courseOptional.isPresent()) {
-      throw new IllegalArgumentException("Course not found with ID: " + courseId);
+      throw new CourseNotFoundException("Course not found with ID: " + courseId);
     }
     return courseOptional.get().getEnrollments().size() >= courseOptional.get().getMaxEnrollments();
   }

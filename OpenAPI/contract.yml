@@ -56,7 +56,56 @@ paths:
       responses:
         '204':
           description: successfully saved the config entries.
-
+  /course/{title}:
+    get:
+      tags:
+        - Courses
+      summary: find course by title
+      description: find course by title
+      operationId: findCourseByTitle
+      parameters:
+        - in: path
+          name: title
+          required: true
+          schema:
+            type: string
+          description: title of the course to be found.
+      responses:
+        '200':
+          description: Successfully retrieved the response
+          content:
+            application/json;charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/course'
+        '404':
+          description: Course not found
+          content:
+            application/json;charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+  /course/{id}:
+    delete:
+        tags:
+            - Courses
+        summary: delete course by id
+        description: delete course by id
+        operationId: deleteCourseById
+        parameters:
+          - in: path
+            name: id
+            required: true
+            schema:
+                type: string
+            description: id of the course to be deleted.
+        responses:
+            '204':
+              description: Successfully deleted the course
+            '404':
+              description: Course not found
+              content:
+                application/json;charset=utf-8:
+                  schema:
+                    $ref: '#/components/schemas/CustomError'
 components:
   schemas:
     courses:
@@ -81,6 +130,14 @@ components:
         maxEnrollments:
           type: integer
           format: int64
+    CustomError:
+      type: object
+      properties:
+        status:
+          type: number
+          example: 404
+        message:
+          type: string
   examples:
     coursesExample:
       value:
