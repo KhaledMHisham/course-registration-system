@@ -129,6 +129,8 @@ components:
           type: string
         maxEnrollments:
           type: integer
+          minLength: 1
+          maxLength: 100
           format: int64
     CustomError:
       type: object

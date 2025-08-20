@@ -12,23 +12,30 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class DemoApplicationTests {
 
-	@Autowired
-	CourseService courseService;
+  @Autowired
+  CourseService courseService;
 
-	@Test
-	void contextLoads() {
-		Course course = new Course();
-		course.setTitle("test course");
-		course.setDescription("test course description");
 
-		Course savedCourse = courseService.save(course);
-		Collection<Course> all = courseService.findAll();
+  @Test
+  void generator() {
+    UUID uuid = UUID.randomUUID();
+    System.out.println("Generated UUID: " + uuid);
+  }
 
-		Assertions.assertNotNull(savedCourse);
-		Assertions.assertEquals(course.getTitle(), savedCourse.getTitle());
+  @Test
+  void contextLoads() {
+    Course course = new Course();
+    course.setTitle("test course");
+    course.setDescription("test course description");
 
-		Assertions.assertNotNull(all);
-		Assertions.assertEquals(1,all.size());
-	}
+    Course savedCourse = courseService.save(course);
+    Collection<Course> all = courseService.findAll();
+
+    Assertions.assertNotNull(savedCourse);
+    Assertions.assertEquals(course.getTitle(), savedCourse.getTitle());
+
+    Assertions.assertNotNull(all);
+    Assertions.assertEquals(1, all.size());
+  }
 
 }
